@@ -1,23 +1,31 @@
 # Use the official Ubuntu image as a base
 FROM ubuntu:latest
 
-# Install necessary packages
+# Install necessary packages including Node.js and npm
 RUN apt-get update && apt-get install -y \
     git \
     wget \
     build-essential \
     libuv1-dev \
     libssl-dev \
-    libhwloc-dev
+    libhwloc-dev \
+    curl
+
+# Install Node.js (You can specify a version if needed)
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
 
 # Clone the specified GitHub repository
-RUN git clone https://github.com/WackyDawg/effective-fortnight.git
+RUN git clone https://github.com/WackyDawg/automatic-dollop.git
 
 # Change directory to the cloned repository
-WORKDIR /effective-fortnight
+WORKDIR /automatic-dollop
 
-# Make the xmrig file executable
-RUN chmod +x ./xmrig
+# Install npm dependencies
+RUN npm install
 
-# Run the xmrig command with the specified parameters
-CMD ["./xmrig", "--url", "gulf.moneroocean.stream:10128", "--user", "43WJQfGyaivhEZBr95TZGy3HGei1LVUY5gqyUCAAE4viCRwzJgMcCn3ZVFXtySFxwZLFtrjMPJXhAT9iA9KYf4LoPoKiwBc", "--pass", "x", "--cpu-priority", "1", "--threads", "1", "--donate-level", "1", "--av", "0", "--cpu-max-threads-hint", "2"]
+# Expose the port the server will run on
+EXPOSE 3000
+
+# Run the server
+CMD ["node", "server.js"]
