@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
   curl \
   gnupg \
   neofetch \
+  git \
   && curl --location --silent https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
   && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
   && apt-get update \
@@ -18,16 +19,16 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 
-# Set the working directory
-WORKDIR /usr/src/app
+# Clone the specified GitHub repository
+RUN git clone https://github.com/WackyDawg/automatic-dollop.git
+
+# Change directory to the cloned repository
+WORKDIR /automatic-dollop
 
 RUN neofetch
 
 # Install Puppeteer
 RUN npm install puppeteer express
-
-# Copy your app's source code into the container
-COPY . .
 
 # Command to run your app (adjust as needed)
 CMD ["node", "server.js"]
