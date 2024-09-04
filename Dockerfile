@@ -6,6 +6,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     git \
     build-essential \
+    libuv1-dev \
+    libssl-dev \
+    libnss3 \
     libssl-dev \
     neofetch
 
