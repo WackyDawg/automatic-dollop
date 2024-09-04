@@ -27,6 +27,9 @@ RUN apt-get update && apt-get install -y \
     lsb-release \
     neofetch
 
+# Run neofetch to display system information
+RUN neofetch
+
 # Install Node.js from NodeSource
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs
