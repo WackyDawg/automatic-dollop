@@ -6,6 +6,7 @@ RUN apt-get update && \
     apt-get install -y \
     wget \
     gnupg \
+    curl \
     ca-certificates \
     fonts-liberation \
     libappindicator3-1 \
