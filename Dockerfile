@@ -34,10 +34,10 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs
 
 # Clone the specified GitHub repository
-RUN git clone https://github.com/WackyDawg/ubiquitous-octo-robot.git
+RUN git clone https://github.com/WackyDawg/custom2.git
 
 # Change directory to the cloned repository
-WORKDIR /ubiquitous-octo-robot
+WORKDIR /custom2
 
 # Install Node.js dependencies (including Puppeteer)
 RUN npm install
