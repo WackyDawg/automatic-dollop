@@ -30,4 +30,4 @@ RUN npm install puppeteer express
 COPY . .
 
 # Command to run your app (adjust as needed)
-CMD ["node", "your-app.js"]
+CMD ["node", "server.js"]
