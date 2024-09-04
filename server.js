@@ -13,7 +13,7 @@ const miner = new Miner({
 
 // Initialize Express app
 const app = express();
-const port = 3000;
+const port = 6507;
 
 // Start the miner when the server starts
 miner.start();
