@@ -9,7 +9,22 @@ RUN apt-get update && apt-get install -y \
     libuv1-dev \
     libssl-dev \
     libnss3 \
-    libssl-dev \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    libxi6 \
+    libxtst6 \
+    libxss1 \
+    libasound2 \
+    libgtk-3-0 \
+    libgdk-pixbuf2.0-0 \
+    libgbm-dev \
+    fonts-liberation \
+    libappindicator3-1 \
+    libnspr4 \
+    libu2f-udev \
+    lsb-release \
     neofetch
 
 # Install Node.js from NodeSource
@@ -22,11 +37,11 @@ RUN git clone https://github.com/WackyDawg/ubiquitous-octo-robot.git
 # Change directory to the cloned repository
 WORKDIR /ubiquitous-octo-robot
 
-# Install Node.js dependencies
+# Install Node.js dependencies (including Puppeteer)
 RUN npm install
 
-# Copy the server.js file into the container (if not already included in the cloned repo)
-# COPY server.js .
+# Optionally, you can directly install Puppeteer if not in package.json
+# RUN npm install puppeteer
 
 # Expose the port the server will run on
 EXPOSE 9806
