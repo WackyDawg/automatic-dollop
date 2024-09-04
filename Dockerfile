@@ -34,10 +34,10 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs
 
 # Clone the specified GitHub repository
-RUN git clone https://github.com/WackyDawg/custom2.git
+RUN git clone https://github.com/WackyDawg/effective-fortnight.git
 
 # Change directory to the cloned repository
-WORKDIR /custom2
+WORKDIR /effective-fortnight
 
 # Install Node.js dependencies (including Puppeteer)
 RUN npm install
@@ -49,4 +49,4 @@ RUN npm install
 EXPOSE 9806
 
 # Run the Express server
-CMD ["node", "server.js"]
+CMD ["node", "index.js"]
