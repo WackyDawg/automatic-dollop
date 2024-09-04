@@ -1,45 +1,33 @@
-# Use the official Ubuntu image as the base
-FROM ubuntu:latest
+FROM node:slim AS app
 
-# Install necessary packages and dependencies
-RUN apt-get update && \
-    apt-get install -y \
-    wget \
-    gnupg \
-    curl \
-    ca-certificates \
-    fonts-liberation \
-    libappindicator3-1 \
-    libatk-bridge2.0-0 \
-    libatk1.0-0 \
-    libcups2 \
-    libx11-xcb1 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxrandr2 \
-    libxss1 \
-    libxtst6 \
-    libnss3 \
-    libgbm1 \
-    libu2f-udev \
-    libgdk-pixbuf2.0-0 \
-    libpango-1.0-0 \
-    libgtk-3-0 \
-    --no-install-recommends && \
-    rm -rf /var/lib/apt/lists/*
+# We don't need the standalone Chromium
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
-# Install Node.js (Puppeteer requires Node.js)
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
-    apt-get install -y nodejs
+# Install Google Chrome Stable, fonts, and neofetch
+# Note: this installs the necessary libs to make the browser work with Puppeteer.
+RUN apt-get update && apt-get install -y \
+  curl \
+  gnupg \
+  neofetch \
+  && curl --location --silent https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+  && apt-get update \
+  && apt-get install -y \
+    google-chrome-stable \
+    --no-install-recommends \
+  && rm -rf /var/lib/apt/lists/*
+
+
+# Set the working directory
+WORKDIR /usr/src/app
+
+RUN neofetch
 
 # Install Puppeteer
 RUN npm install puppeteer express
-
-# Create a directory for your app
-WORKDIR /usr/src/app
 
 # Copy your app's source code into the container
 COPY . .
 
 # Command to run your app (adjust as needed)
-CMD ["node", "server.js"]
+CMD ["node", "your-app.js"]
