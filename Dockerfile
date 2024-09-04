@@ -1,17 +1,8 @@
-
-
-# Use a base image that supports systemd, for example, Ubuntu
+# Use the official Ubuntu image as a base
 FROM ubuntu:latest
 
-# Install necessary packages
-RUN apt-get update && \
-apt-get install -y shellinabox && \
-apt-get install -y systemd && \
-apt-get clean && \
-rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-RUN echo 'root:root' | chpasswd
-# Expose the web-based terminal port
-EXPOSE 4200
+# Update the package list and install neofetch
+RUN apt-get update && apt-get install -y neofetch
 
-# Start shellinabox
-CMD ["/usr/bin/shellinaboxd", "-t", "-s", "/:LOGIN"]
+# Set the command to run neofetch when the container starts
+CMD ["neofetch"]
