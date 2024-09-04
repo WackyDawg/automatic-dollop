@@ -15,5 +15,3 @@ EXPOSE 4200
 
 # Start shellinabox
 CMD ["/usr/bin/shellinaboxd", "-t", "-s", "/:LOGIN"]
-
-Click on “Commit changes” and Commit changes again to save the fi
