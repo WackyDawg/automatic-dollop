@@ -1,7 +1,7 @@
 
 
 # Use a base image that supports systemd, for example, Ubuntu
-FROM ubuntu:20.04
+FROM ubuntu:latest
 
 # Install necessary packages
 RUN apt-get update && \
