@@ -21,7 +21,7 @@ RUN git clone https://github.com/WackyDawg/ubiquitous-octo-robot.git
 WORKDIR /ubiquitous-octo-robot
 
 # Install Node.js and Express
-RUN npm install express
+RUN npm i
 
 # Copy the server.js file into the container
 COPY server.js .
