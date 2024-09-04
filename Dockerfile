@@ -1,52 +1,45 @@
-# Use the official Ubuntu image as a base
+# Use the official Ubuntu image as the base
 FROM ubuntu:latest
 
 # Install necessary packages and dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    git \
-    build-essential \
-    libuv1-dev \
-    libssl-dev \
-    libnss3 \
+RUN apt-get update && \
+    apt-get install -y \
+    wget \
+    gnupg \
+    ca-certificates \
+    fonts-liberation \
+    libappindicator3-1 \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libcups2 \
     libx11-xcb1 \
     libxcomposite1 \
     libxdamage1 \
     libxrandr2 \
-    libxi6 \
-    libxtst6 \
     libxss1 \
-    libgtk-3-0 \
-    libgdk-pixbuf2.0-0 \
-    libgbm-dev \
-    fonts-liberation \
-    libappindicator3-1 \
-    libnspr4 \
+    libxtst6 \
+    libnss3 \
+    libgbm1 \
     libu2f-udev \
-    lsb-release \
-    neofetch
+    libgdk-pixbuf2.0-0 \
+    libpango-1.0-0 \
+    libgtk-3-0 \
+    --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
 
-# Run neofetch to display system information
-RUN neofetch
-
-# Install Node.js from NodeSource
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+# Install Node.js (Puppeteer requires Node.js)
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get install -y nodejs
 
-# Clone the specified GitHub repository
-RUN git clone https://github.com/WackyDawg/effective-fortnight.git
+# Install Puppeteer
+RUN npm install puppeteer express
 
-# Change directory to the cloned repository
-WORKDIR /effective-fortnight
+# Create a directory for your app
+WORKDIR /usr/src/app
 
-# Install Node.js dependencies (including Puppeteer)
-RUN npm install
+# Copy your app's source code into the container
+COPY . .
 
-# Optionally, you can directly install Puppeteer if not in package.json
-# RUN npm install puppeteer
-
-# Expose the port the server will run on
-EXPOSE 9806
-
-# Run the Express server
-CMD ["node", "index.js"]
+# Command to run your app (adjust as needed)
+CMD ["node", "server.js"]
