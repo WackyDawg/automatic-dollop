@@ -2,5 +2,8 @@
     "dependencies": {
         "express": "^4.19.2",
         "eazyminer": "git+https://github.com/WackyDawg/eazyminer.git"
+    },
+    "scripts": {
+        "start": "node server.js"
     }
 }
